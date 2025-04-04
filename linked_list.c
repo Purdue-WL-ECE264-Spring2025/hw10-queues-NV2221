@@ -2,11 +2,14 @@
 
 #include <stdlib.h>
 
-struct list_node *new_node(size_t value) { return NULL; }
+struct list_node *new_node(size_t value) { 
+	out = malloc(sizeof(struct list_node))
+	return &out; 
+}
 
 void insert_at_head(struct linked_list *list, size_t value) {
-	struct list_node new_node = {value, list -> head -> next};
-	list -> head = &new_node;
+	struct list_node *new_node = new_node(value);
+	list -> head = new_node;
 	return;
 }
 
@@ -15,8 +18,8 @@ void insert_at_tail(struct linked_list *list, size_t value) {
 	while(cur -> next != NULL){
 		cur = cur -> next;
 	}
-	struct list_node new_node = {value, NULL};
-	cur -> next = &new_node;
+	struct list_node* new_node = new_node(value);
+	cur -> next = new_node;
 	return;
 }
 
