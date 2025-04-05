@@ -1,8 +1,8 @@
 #include "queue.h"
 #include "tile_game.h"
 
-int match_maze(uint8_t tiles1[4][4], uint8 tiles2[4][4]);
-struct 
+int match_maze(uint8_t tiles1[4][4], uint8_t tiles2[4][4]);
+struct game_state copy_state(struct game_state state);
 
 void enqueue(struct queue *q, struct game_state state) {
 	insert_at_head(&(q->data), serialize(state));
@@ -42,36 +42,36 @@ int number_of_moves(struct game_state start) {
 	int j;
 	int ct = 1;
 	for(i = 0; i < 4; i++){
-		for (j = 0; j < 4; j++;){
+		for (j = 0; j < 4; j++){
 			final[i][j] = ct;
 			ct ++;
 		}
 	}
 	final[3][3] = 0;
-	struct queue q;
+	struct queue q ={.data = NULL};
 	enqueue(&q, start);
-	while(q -> data.head != NULL){
+	while(q.data.head != NULL){
 		struct game_state curr;
 		curr = dequeue(&q);
-		if(match_maze(final, curr) == 1){
+		if(match_maze(final, curr.tiles) == 1){
 			return curr.num_steps;
 		}
 		for(i = 0; i<4; i++){
 			struct game_state next = copy_state(curr);
 			if(i == 0){
-				move_up(next);
+				move_up(&next);
 				enqueue(&q, next);
 			}
 			if(i ==1){
-				move_down(next);
+				move_down(&next);
 				enqueue(&q, next);
 			}
 			if(i ==2){
-				move_left(next);
+				move_left(&next);
 				enqueue(&q, next);
 			}
 			if(i ==3){
-				move_right(next);
+				move_right(&next);
 				enqueue(&q, next);
 			}
 		}
