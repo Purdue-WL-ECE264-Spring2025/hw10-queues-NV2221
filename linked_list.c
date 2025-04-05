@@ -9,8 +9,14 @@ struct list_node *new_node(size_t value) {
 
 void insert_at_head(struct linked_list *list, size_t value) {
 	struct list_node *node = new_node(value);
-	node -> next = list -> head -> next;
-	list -> head = node;
+	node -> value = value;
+	if(list->head == NULL){
+		list -> head = node;
+	}
+	else{
+		node -> next = list -> head;
+		list -> head = node;
+	}
 	return;
 }
 

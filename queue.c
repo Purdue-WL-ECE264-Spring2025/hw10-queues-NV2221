@@ -3,7 +3,19 @@
 
 int match_maze(uint8_t tiles1[4][4], uint8_t tiles2[4][4]);
 struct game_state copy_state(struct game_state state);
+int already_seen(struct linked_list* visited, size_t value);
 
+int already_seen(struct linked_list* visited, size_t value){
+	struct list_node* cur = visited->head;
+	while (cur != NULL){
+		if(cur -> value == value){
+			return 1;
+		}
+		cur = cur -> next;
+	}
+	insert_at_head(visited, value);
+	return 0;
+}
 void enqueue(struct queue *q, struct game_state state) {
 	insert_at_head(&(q->data), serialize(state));
 	return;
@@ -11,8 +23,8 @@ void enqueue(struct queue *q, struct game_state state) {
 
 struct game_state dequeue(struct queue *q) { 
 	size_t temp = remove_from_tail(&(q->data));
-	return (deserialize(temp)); 
-}
+	return (deserialize(temp));
+}	
 
 int match_maze(uint8_t tiles1[4][4], uint8_t tiles2[4][4]){
 	int out = 1;
@@ -48,7 +60,9 @@ int number_of_moves(struct game_state start) {
 		}
 	}
 	final[3][3] = 0;
-	struct queue q ={.data = NULL};
+	struct linked_list init = {.head = NULL};
+	struct queue q = {.data = init};
+	struct linked_list visited = {.head = NULL};
 	enqueue(&q, start);
 	while(q.data.head != NULL){
 		struct game_state curr;
@@ -60,18 +74,17 @@ int number_of_moves(struct game_state start) {
 			struct game_state next = copy_state(curr);
 			if(i == 0){
 				move_up(&next);
-				enqueue(&q, next);
 			}
 			if(i ==1){
 				move_down(&next);
-				enqueue(&q, next);
 			}
 			if(i ==2){
 				move_left(&next);
-				enqueue(&q, next);
 			}
 			if(i ==3){
 				move_right(&next);
+			}
+			if(already_seen(&visited, serialize(next)) == 0){
 				enqueue(&q, next);
 			}
 		}
