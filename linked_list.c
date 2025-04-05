@@ -3,12 +3,13 @@
 #include <stdlib.h>
 
 struct list_node *new_node(size_t value) { 
-	out = malloc(sizeof(struct list_node))
+	struct list_node* out = malloc(sizeof(struct list_node));
 	return &out; 
 }
 
 void insert_at_head(struct linked_list *list, size_t value) {
 	struct list_node *new_node = new_node(value);
+	new_node -> next = list -> head -> next;
 	list -> head = new_node;
 	return;
 }
@@ -19,6 +20,7 @@ void insert_at_tail(struct linked_list *list, size_t value) {
 		cur = cur -> next;
 	}
 	struct list_node* new_node = new_node(value);
+	new_node -> next = NULL;
 	cur -> next = new_node;
 	return;
 }
@@ -33,8 +35,18 @@ size_t remove_from_head(struct linked_list *list) {
 }
 
 size_t remove_from_tail(struct linked_list *list) { 
-	struct list_node * temp = list -> head;
 	size_t out;
+	if(list -> head == NULL){
+		return 0;
+	}
+	struct list_node* temp = list -> head;
+	if (list->head->next == NULL){
+		size_t out = list->head->value;
+		free(temp);
+		list->head = NULL;
+		return out;
+	}
+
 	while(temp -> next -> next != NULL){
 		temp = temp -> next;
 	}
